@@ -1740,8 +1740,7 @@ NPY_NO_EXPORT void
         #pragma omp parallel for firstprivate(ip2,is2) reduction (@OP@:io1)
 #endif 
         for(i = 0; i < n; i++) {
-            ip2 = ip2 + is2*i;
-            io1 @OP@= *(@type@ *)ip2;
+            io1 @OP@= *(@type@ *)(ip2 + is2*i);
         }
         *((@type@ *)iop1) = io1;
 #endif
