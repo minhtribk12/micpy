@@ -1641,7 +1641,9 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
     if (n < 8) {
         npy_intp i;
         @type@ res = 0.;
+        #pragma omp parallel for
         for (i = 0; i < n; i++) {
+            #pragma omp atomic
             res += @trf@(a[i * stride]);
         }
         return res;
