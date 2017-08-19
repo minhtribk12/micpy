@@ -1716,6 +1716,7 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
  * # kind = add, subtract, multiply, divide#
  * # OP = +, -, *, /#
  * # PW = 1, 0, 0, 0#
+ * # PW2 = 1, 1, 1, 0#
  */
 NPY_NO_EXPORT void
 @TYPE@_@kind@(char **args, npy_intp *dimensions, npy_intp *steps, void *NPY_UNUSED(func))
@@ -1729,7 +1730,17 @@ NPY_NO_EXPORT void
         *iop1 @OP@= pairwise_sum_@TYPE@((@type@ *)args[1], n,
                                         steps[1] / (npy_intp)sizeof(@type@));
 #else
-        BINARY_REDUCE_LOOP(@type@) {
+        char *iop1 = args[0]; 
+        @type@ io1 = *(@type@ *)iop1; 
+        char *ip2 = args[1]; 
+        npy_intp is2 = steps[1]; 
+        npy_intp n = dimensions[0]; 
+        npy_intp i;
+#if @PW2@
+        #pragma omp parallel for firstprivate(ip2,is2) reduction (@OP@:io1)
+#endif 
+        for(i = 0; i < n; i++) {
+            ip2 = ip2 + is2*i;
             io1 @OP@= *(@type@ *)ip2;
         }
         *((@type@ *)iop1) = io1;
