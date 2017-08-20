@@ -1641,7 +1641,6 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
     if (n < 8) {
         npy_intp i;
         @type@ res = 0.;
-        #pragma omp parallel for reduction (+:res)
         for (i = 0; i < n; i++) {
             res += @trf@(a[i * stride]);
         }
@@ -1664,7 +1663,6 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
         r[5] = @trf@(a[5 * stride]);
         r[6] = @trf@(a[6 * stride]);
         r[7] = @trf@(a[7 * stride]);
-        #pragma omp parallel for reduction (+:r[:8])
         for (i = 8; i < n - (n % 8); i += 8) {
             /* small blocksizes seems to mess with hardware prefetch */
             NPY_PREFETCH(&a[(i + 512 / sizeof(a[0])) * stride], 0, 3);
@@ -1683,7 +1681,6 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
               ((r[4] + r[5]) + (r[6] + r[7]));
 
         /* do non multiple of 8 rest */
-        #pragma omp parallel for reduction (+:res)
         for (; i < n; i++) {
             res += @trf@(a[i * stride]);
         }
