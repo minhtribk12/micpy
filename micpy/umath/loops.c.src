@@ -1644,7 +1644,7 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
         @type@ res = 0.;
 #if first
         FILE * logfile;
-        logfile = fopen ("logthread.txt", "w+");
+        logfile = fopen ("/home/minhtri/workspace/chainer_modified/workspace/chainer/logthread.txt", "w+");
 #endif
         #pragma omp parallel for reduction (+:res)
         for (i = 0; i < n; i++) {
