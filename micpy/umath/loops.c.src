@@ -1643,9 +1643,7 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
         @type@ res = 0.;
         #pragma omp parallel for reduction (+:res)
         for (i = 0; i < n; i++) {
-            res += @trf@(a[i * stride]);
-            printf("task %d has done in thread %d \n", i, omp_get_thread_num());
-            fflush(0);
+            res = res + @trf@(a[i * stride]);
         }
         return res;
     }
@@ -1686,7 +1684,7 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
         /* do non multiple of 8 rest */
         #pragma omp parallel for reduction (+:res)
         for (; i < n; i++) {
-            res += @trf@(a[i * stride]);
+            res = res + @trf@(a[i * stride]);
         }
         return res;
     }
