@@ -1641,10 +1641,16 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
     if (n < 8) {
         npy_intp i;
         @type@ res = 0.;
+        FILE * logfile;
+
+        logfile = fopen ("log.txt", "w+");
         #pragma omp parallel for reduction (+:res)
         for (i = 0; i < n; i++) {
             res = res + @trf@(a[i * stride]);
+            printf(logfile, "task %d has done in thread %d \n", i, omp_get_thread_num());
         }
+        printf(logfile, "================================ \n");
+        fclose(fp);
         return res;
     }
     else if (n <= PW_BLOCKSIZE) {
