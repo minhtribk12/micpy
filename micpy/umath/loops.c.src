@@ -7,6 +7,7 @@
 #include "npy_config.h"
 #define PY_ARRAY_UNIQUE_SYMBOL _mpy_umathmodule_ARRAY_API
 #define NO_IMPORT_ARRAY
+#define CHUNK_SIZE 3
 
 #include <numpy/npy_common.h>
 #include <numpy/arrayobject.h>
@@ -1640,81 +1641,13 @@ static @type@
 pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
 {
 #ifdef __MIC__
-    if (n < 8) {
-        npy_intp i;
-        @type@ res = 0.;
-        if(first)
-        {
-            logfile = fopen ("/home/minhtri/workspace/log/logthread.txt", "w+");
-        }
-        #pragma omp parallel for reduction (+:res)
-        for (i = 0; i < n; i++) {
-            res += @trf@(a[i * stride]);
-            if(first)
-            {
-                if (omp_get_thread_num() == 0)
-                {
-                    fprintf(logfile, "max thread %d \n", i, omp_get_num_threads());
-                }
-                fprintf(logfile, "task %d has done in thread %d \n", i, omp_get_thread_num());
-            }          
-        }
-        if(first)
-        {
-            fprintf(logfile, "================================ \n");
-            fclose(logfile);
-            first = 0;
-        }
-        return res;
-    }
-    else if (n <= PW_BLOCKSIZE) {
-        npy_intp i;
-        @type@ r[8], res;
-
-        /*
-         * sum a block with 8 accumulators
-         * 8 times unroll reduces blocksize to 16 and allows vectorization with
-         * avx without changing summation ordering
-         */
-        r[0] = @trf@(a[0 * stride]);
-        r[1] = @trf@(a[1 * stride]);
-        r[2] = @trf@(a[2 * stride]);
-        r[3] = @trf@(a[3 * stride]);
-        r[4] = @trf@(a[4 * stride]);
-        r[5] = @trf@(a[5 * stride]);
-        r[6] = @trf@(a[6 * stride]);
-        r[7] = @trf@(a[7 * stride]);
-        for (i = 8; i < n - (n % 8); i += 8) {
-            /* small blocksizes seems to mess with hardware prefetch */
-            NPY_PREFETCH(&a[(i + 512 / sizeof(a[0])) * stride], 0, 3);
-            r[0] += @trf@(a[(i + 0) * stride]);
-            r[1] += @trf@(a[(i + 1) * stride]);
-            r[2] += @trf@(a[(i + 2) * stride]);
-            r[3] += @trf@(a[(i + 3) * stride]);
-            r[4] += @trf@(a[(i + 4) * stride]);
-            r[5] += @trf@(a[(i + 5) * stride]);
-            r[6] += @trf@(a[(i + 6) * stride]);
-            r[7] += @trf@(a[(i + 7) * stride]);
-        }
-
-        /* accumulate now to avoid stack spills for single peel loop */
-        res = ((r[0] + r[1]) + (r[2] + r[3])) +
-              ((r[4] + r[5]) + (r[6] + r[7]));
-
-        /* do non multiple of 8 rest */
-        #pragma omp parallel for reduction (+:res)
-        for (; i < n; i++) {
-            res += @trf@(a[i * stride]);
-        }
-        return res;
-    }
-    else {
-        /* divide by two but avoid non-multiples of unroll factor */
-        npy_uintp n2 = n / 2;
-        n2 -= n2 % 8;
-        return pairwise_sum_@TYPE@(a, n2, stride) +
-               pairwise_sum_@TYPE@(a + n2 * stride, n - n2, stride);
-    }
+	npy_intp i;
+	@type@ res = 0.;
+	#pragma omp parallel for schedule(dynamic,CHUNK_SIZE) reduction (+:res)
+	for (i = 0; i < n; i++) {
+		res += @trf@(a[i * stride]);         
+	}
+	return res;
 #else
     return 0.0;
 #endif
