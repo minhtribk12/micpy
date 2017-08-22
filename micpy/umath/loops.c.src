@@ -1688,6 +1688,7 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
         count[omp_get_thread_num()]++;
 		res += @trf@(a[i * stride]);         
 	}
+    first = 1;
     if(logfile != NULL)
     {
         for (i = 0; i < NUM_THREADS; i++)
