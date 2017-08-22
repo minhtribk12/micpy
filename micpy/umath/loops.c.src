@@ -1623,6 +1623,7 @@ NPY_NO_EXPORT void
 int first = 1;
 FILE * logfile;
 int count[250];
+int frequency = 0;
 
 /**begin repeat
  * Float types
@@ -1648,6 +1649,7 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
 // Parallel pairwise_sum
 // Author: minhtribk12
 // Date: 22/08/2017
+    frequency ++;
     #pragma omp parallel for
     for(i = 0; i < NUM_THREADS; i++)
     {
@@ -1658,11 +1660,12 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
         logfile = fopen ("/home/minhtri/workspace/log/logthread.txt", "w+");
         if (logfile != NULL)
         {
-                fprintf(logfile,"dimensions is:  %d \n", n);
+                fprintf(logfile,"dimensions is:  %d\n", n);
         }
         else
         {
                 perror("fail");
+                fprintf(logfile,"fail in thread %d\n",omp_get_thread_num());
         }
 
     }
@@ -1692,6 +1695,7 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
         {
             fprintf(logfile,"Tasks in thread %d is:  %d \n",i, count[i]);
         }
+        fprintf(logfile,"Loop time: %d\n",frequency);
         fprintf(logfile,"======================================\n");
         fclose(logfile);
     }
