@@ -1652,12 +1652,16 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
             res += @trf@(a[i * stride]);
             if(first)
             {
-                printf(logfile, "task %d has done in thread %d \n", i, omp_get_thread_num());
+                if (omp_get_thread_num() == 0)
+                {
+                    fprintf(logfile, "max thread %d \n", i, omp_get_num_threads());
+                }
+                fprintf(logfile, "task %d has done in thread %d \n", i, omp_get_thread_num());
             }          
         }
         if(first)
         {
-            printf(logfile, "================================ \n");
+            fprintf(logfile, "================================ \n");
             fclose(logfile);
             first = 0;
         }
