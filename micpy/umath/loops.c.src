@@ -1621,6 +1621,7 @@ NPY_NO_EXPORT void
 
 int first = 1;
 FILE * logfile;
+int count[250];
 
 /**begin repeat
  * Float types
@@ -1646,7 +1647,12 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
 // Parallel pairwise_sum
 // Author: minhtribk12
 // Date: 22/08/2017
-/*    if (first)
+    #pragma omp parallel for
+    for(i = 0; i < 250; i++)
+    {
+        count[i] = 0;
+    }
+    if (first)
     {
         logfile = fopen ("/home/minhtri/workspace/log/logthread.txt", "w+");
         if (logfile != NULL)
@@ -1659,27 +1665,31 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
         }
 
     }
-*/
 	#pragma omp parallel for schedule(guided,CHUNK_SIZE) reduction (+:res)
 	for (i = 0; i < n; i++) {
 // Parallel pairwise_sum
 // Author: minhtribk12
 // Date: 22/08/2017
-/*    if (first)
+        if(logfile != NULL)
         {
-            if(logfile != NULL)
+            if (first)
             {
                 if(omp_get_thread_num() == 0)
                 {
                     fprintf(logfile,"Max thread is:  %d \n", omp_get_num_threads());
-                    fclose(logfile);
                     first = 0;
                 }
             }
+            fprintf(logfile,"task %d has been execute in thread:  %d \n", i, omp_get_thread_num());
         }
-*/
 		res += @trf@(a[i * stride]);         
 	}
+    first = 1;
+    if(logfile != NULL)
+    {
+        fprintf(logfile,"======================================\n"=);
+        fclose(logfile);
+    }
 	return res;
 #else
     return 0.0;
@@ -1711,7 +1721,6 @@ NPY_NO_EXPORT void
 #if @PW@
         @type@ * iop1 = (@type@ *)args[0];
         npy_intp n = dimensions[0];
-
         *iop1 @OP@= pairwise_sum_@TYPE@((@type@ *)args[1], n,
                                         steps[1] / (npy_intp)sizeof(@type@));
 #else
