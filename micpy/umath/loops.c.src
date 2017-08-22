@@ -1687,7 +1687,7 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
     first = 1;
     if(logfile != NULL)
     {
-        fprintf(logfile,"======================================\n"=);
+        fprintf(logfile,"======================================\n");
         fclose(logfile);
     }
 	return res;
