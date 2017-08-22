@@ -8,6 +8,7 @@
 #define PY_ARRAY_UNIQUE_SYMBOL _mpy_umathmodule_ARRAY_API
 #define NO_IMPORT_ARRAY
 #define CHUNK_SIZE 4
+#define NUM_THREADS 250
 
 #include <numpy/npy_common.h>
 #include <numpy/arrayobject.h>
@@ -1648,7 +1649,7 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
 // Author: minhtribk12
 // Date: 22/08/2017
     #pragma omp parallel for
-    for(i = 0; i < 250; i++)
+    for(i = 0; i < NUM_THREADS; i++)
     {
         count[i] = 0;
     }
@@ -1680,13 +1681,17 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
                     first = 0;
                 }
             }
-            fprintf(logfile,"task %d has been execute in thread:  %d \n", i, omp_get_thread_num());
         }
+        count[omp_get_thread_num()]++;
 		res += @trf@(a[i * stride]);         
 	}
     first = 1;
     if(logfile != NULL)
     {
+        for (i = 0; i < NUM_THREADS; i++)
+        {
+            fprintf(logfile,"Tasks in thread %d is:  %d \n",i, count[i]);
+        }
         fprintf(logfile,"======================================\n");
         fclose(logfile);
     }
