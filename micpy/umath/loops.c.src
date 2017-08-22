@@ -7,7 +7,7 @@
 #include "npy_config.h"
 #define PY_ARRAY_UNIQUE_SYMBOL _mpy_umathmodule_ARRAY_API
 #define NO_IMPORT_ARRAY
-#define CHUNK_SIZE 8
+#define CHUNK_SIZE 4
 
 #include <numpy/npy_common.h>
 #include <numpy/arrayobject.h>
@@ -1643,7 +1643,10 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
 #ifdef __MIC__
 	npy_intp i;
 	@type@ res = 0.;
-    if (first)
+// Parallel pairwise_sum
+// Author: minhtribk12
+// Date: 22/08/2017
+/*    if (first)
     {
         logfile = fopen ("/home/minhtri/workspace/log/logthread.txt", "w+");
         if (logfile != NULL)
@@ -1656,9 +1659,13 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
         }
 
     }
-	#pragma omp parallel for schedule(dynamic,CHUNK_SIZE) reduction (+:res)
+*/
+	#pragma omp parallel for schedule(guided,CHUNK_SIZE) reduction (+:res)
 	for (i = 0; i < n; i++) {
-        if(first)
+// Parallel pairwise_sum
+// Author: minhtribk12
+// Date: 22/08/2017
+/*    if (first)
         {
             if(logfile != NULL)
             {
@@ -1670,6 +1677,7 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
                 }
             }
         }
+*/
 		res += @trf@(a[i * stride]);         
 	}
 	return res;
