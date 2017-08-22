@@ -7,7 +7,7 @@
 #include "npy_config.h"
 #define PY_ARRAY_UNIQUE_SYMBOL _mpy_umathmodule_ARRAY_API
 #define NO_IMPORT_ARRAY
-#define CHUNK_SIZE 1
+#define CHUNK_SIZE 16
 #define NUM_THREADS 250
 
 #include <numpy/npy_common.h>
@@ -1649,7 +1649,7 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
 // Parallel pairwise_sum
 // Author: minhtribk12
 // Date: 22/08/2017
-/*    frequency ++;
+    frequency ++;
     #pragma omp parallel for
     for(i = 0; i < NUM_THREADS; i++)
     {
@@ -1669,13 +1669,12 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
         }
 
     }
-*/
 	#pragma omp parallel for schedule(guided,CHUNK_SIZE) reduction (+:res)
 	for (i = 0; i < n; i++) {
 // Parallel pairwise_sum
 // Author: minhtribk12
 // Date: 22/08/2017
-/*        if(logfile != NULL)
+        if(logfile != NULL)
         {
             if (first)
             {
@@ -1687,10 +1686,8 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
             }
         }
         count[omp_get_thread_num()]++;
-*/
 		res += @trf@(a[i * stride]);         
 	}
-/*    first = 1;
     if(logfile != NULL)
     {
         for (i = 0; i < NUM_THREADS; i++)
@@ -1701,7 +1698,6 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
         fprintf(logfile,"======================================\n");
         fclose(logfile);
     }
-*/
 	return res;
 #else
     return 0.0;
