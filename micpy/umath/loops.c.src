@@ -1744,7 +1744,7 @@ NPY_NO_EXPORT void
         npy_intp n = dimensions[0]; 
         npy_intp i;
 #if @PW2@
-        #pragma omp parallel for firstprivate(ip2,is2) reduction (@OP@:io1) schedule(guided,CHUNK_SIZE)
+        #pragma omp parallel for firstprivate(ip2,is2) reduction (@OP@:io1)
 #endif 
         for(i = 0; i < n; i++) {
             io1 @OP@= *(@type@ *)(ip2 + is2*i);
@@ -1757,7 +1757,7 @@ NPY_NO_EXPORT void
         npy_intp is1 = steps[0], is2 = steps[1], os1 = steps[2];
         npy_intp n = dimensions[0];
         npy_intp i;
-        #pragma omp parallel for firstprivate(is1,is2,os1) schedule(guided,CHUNK_SIZE)
+        #pragma omp parallel for firstprivate(is1,is2,os1)
         for(i = 0; i < n; i++) {
             const @type@ in1 = *(@type@ *)(ip1 + i*is1);
             const @type@ in2 = *(@type@ *)(ip2 + i*is2);
