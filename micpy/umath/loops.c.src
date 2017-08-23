@@ -1725,12 +1725,14 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
  * # OP = +, -, *, /#
  * # PW = 1, 0, 0, 0#
  * # PW2 = 1, 1, 1, 0#
+ * # PW3 = 0, 0, 1, 0#
  */
 NPY_NO_EXPORT void
 @TYPE@_@kind@(char **args, npy_intp *dimensions, npy_intp *steps, void *NPY_UNUSED(func))
 {
+#if @PW3@    
     frequency ++;
-    logfile = fopen ("/tmp/workspace/tringuyen/logthread.txt", "w+");
+    logfile = fopen ("/tmp/workspace/tringuyen/logthread_multiply.txt", "w+");
     if (logfile != NULL)
     {
             fprintf(logfile,"loop time is:  %d\n", frequency);
@@ -1740,6 +1742,7 @@ NPY_NO_EXPORT void
     {
             perror("fail");
     }
+#endif    
 #ifdef __MIC__
     if (IS_BINARY_REDUCE) {
 #if @PW@
