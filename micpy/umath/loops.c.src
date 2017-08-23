@@ -1763,6 +1763,8 @@ NPY_NO_EXPORT void
     if (logfile != NULL)
     {
             fprintf(logfile,"add is used %d times\n", frequency_add);
+            fprintf(logfile,"minus is used %d times\n", frequency_minus);
+            fprintf(logfile,"divide is used %d times\n", frequency_divide);
             fprintf(logfile,"multiply is used %d times\n", frequency_multiply);
             fprintf(logfile,"loop time is:  %d\n", frequency);
             fprintf(logfile,"max dimension is:  %d\n", max_dimension);
