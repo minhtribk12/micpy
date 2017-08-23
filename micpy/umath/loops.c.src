@@ -1624,6 +1624,10 @@ int first = 1;
 FILE * logfile;
 int count[250];
 int frequency = 0;
+int frequency_add = 0;
+int frequency_multiply = 0;
+int max_dimension = 0;
+int min_dimension = 60000;
 
 /**begin repeat
  * Float types
@@ -1730,12 +1734,25 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
 NPY_NO_EXPORT void
 @TYPE@_@kind@(char **args, npy_intp *dimensions, npy_intp *steps, void *NPY_UNUSED(func))
 {
-#if @PW3@    
     frequency ++;
+    if (dimensions[0] > max_dimension)
+    {
+        max_dimension = dimensions[0];
+    }
+    if (dimensions[0] < min_dimension)
+    {
+        min_dimension = dimensions[0];
+    }
+#if @PW3@    
+    frequency_multiply ++;
     logfile = fopen ("/tmp/workspace/tringuyen/logthread_multiply.txt", "w+");
     if (logfile != NULL)
     {
+            fprintf(logfile,"add is used %d times\n", frequency_add);
+            fprintf(logfile,"multiply is used %d times\n", frequency_multiply);
             fprintf(logfile,"loop time is:  %d\n", frequency);
+            fprintf(logfile,"max dimension is:  %d\n", max_dimension);
+            fprintf(logfile,"min dimension is:  %d\n", min_dimension);
             fclose(logfile);
     }
     else
@@ -1746,6 +1763,7 @@ NPY_NO_EXPORT void
 #ifdef __MIC__
     if (IS_BINARY_REDUCE) {
 #if @PW@
+        frequency_multiply ++;
         @type@ * iop1 = (@type@ *)args[0];
         npy_intp n = dimensions[0];
         *iop1 @OP@= pairwise_sum_@TYPE@((@type@ *)args[1], n,
