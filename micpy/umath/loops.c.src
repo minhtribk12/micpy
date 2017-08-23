@@ -1626,6 +1626,8 @@ int count[250];
 int frequency = 0;
 int frequency_add = 0;
 int frequency_multiply = 0;
+int frequency_minus = 0;
+int frequency_divide = 0;
 int max_dimension = 0;
 int min_dimension = 60000;
 
@@ -1730,11 +1732,25 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
  * # PW = 1, 0, 0, 0#
  * # PW2 = 1, 1, 1, 0#
  * # PW3 = 0, 0, 1, 0#
+ * # PW4 = 0, 1, 0, 0#
+ * # PW5 = 0, 0, 0, 1#
  */
 NPY_NO_EXPORT void
 @TYPE@_@kind@(char **args, npy_intp *dimensions, npy_intp *steps, void *NPY_UNUSED(func))
 {
     frequency ++;
+#if @PW3@    
+    frequency_multiply ++;
+#endif
+#if @PW@    
+    frequency_add ++;
+#endif
+#if @PW4@    
+    frequency_minus ++;
+#endif
+#if @PW5@    
+    frequency_divide ++;
+#endif
     if (dimensions[0] > max_dimension)
     {
         max_dimension = dimensions[0];
@@ -1743,8 +1759,6 @@ NPY_NO_EXPORT void
     {
         min_dimension = dimensions[0];
     }
-#if @PW3@    
-    frequency_multiply ++;
     logfile = fopen ("/tmp/workspace/tringuyen/logthread_count.txt", "w+");
     if (logfile != NULL)
     {
@@ -1758,12 +1772,10 @@ NPY_NO_EXPORT void
     else
     {
             perror("fail");
-    }
-#endif    
+    }    
 #ifdef __MIC__
     if (IS_BINARY_REDUCE) {
 #if @PW@
-        frequency_add ++;
         @type@ * iop1 = (@type@ *)args[0];
         npy_intp n = dimensions[0];
         *iop1 @OP@= pairwise_sum_@TYPE@((@type@ *)args[1], n,
