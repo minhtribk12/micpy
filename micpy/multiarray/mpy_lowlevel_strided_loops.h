@@ -191,7 +191,7 @@ PyMicArray_TransferMaskedStridedToNDim(npy_intp ndim,
                 NpyAuxData *transferdata, int transferdevice);
 
 
-//pragma omp declare target
+//#pragma omp declare target
 /*
  * Return number of elements that must be peeled from
  * the start of 'addr' with 'nvals' elements of size 'esize'
