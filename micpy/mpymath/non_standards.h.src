@@ -14,7 +14,7 @@
 #define mpy_radiansf mpy_deg2radf
 #define mpy_radiansl mpy_deg2radl
 
-#pragma omp declare target
+//#pragma omp declare target
 /**begin repeat
  * #type = npy_float, npy_double, npy_longdouble#
  * #c = f, ,l#
@@ -161,5 +161,5 @@ mpy_divmod@c@(@type@ a, @type@ b, @type@ *modulus)
 }
 
 /**end repeat**/
-#pragma omp end declare target
+//#pragma omp end declare target
 

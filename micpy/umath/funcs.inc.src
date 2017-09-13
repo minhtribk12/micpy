@@ -13,7 +13,7 @@
  *****************************************************************************
  */
 
-#pragma omp declare target
+//#pragma omp declare target
 
 /*
  * don't pass structures between functions (only pointers) because how
@@ -213,4 +213,4 @@ nc_tanh@c@(@ctype@ *x, @ctype@ *r)
 
 /**end repeat**/
 
-#pragma omp end declare target
+//#pragma omp end declare target

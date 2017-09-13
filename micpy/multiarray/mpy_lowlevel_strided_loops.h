@@ -191,7 +191,7 @@ PyMicArray_TransferMaskedStridedToNDim(npy_intp ndim,
                 NpyAuxData *transferdata, int transferdevice);
 
 
-#pragma omp declare target
+//pragma omp declare target
 /*
  * Return number of elements that must be peeled from
  * the start of 'addr' with 'nvals' elements of size 'esize'
@@ -288,7 +288,7 @@ mpy_bswap8_unaligned(char * x)
     a = x[3]; x[3] = x[4]; x[4] = a;
 }
 
-#pragma omp end declare target
+//#pragma omp end declare target
 
 /* Start raw iteration */
 #define NPY_RAW_ITER_START(idim, ndim, coord, shape) \

@@ -13,7 +13,7 @@
 #include "nditer_impl.h"
 
 
-#pragma omp declare target
+//#pragma omp declare target
 
 /* SPECIALIZED iternext functions that handle the non-buffering part */
 
@@ -189,7 +189,7 @@ mpyiter_iternext_sizeone(MpyIter *iter)
     return 0;
 }
 
-#pragma omp end declare target
+//#pragma omp end declare target
 
 /**begin repeat
  * #const_nop = 1, 2, 3, 4, NPY_MAXDIMS#
@@ -468,7 +468,7 @@ MpyIter_GetIterNext(MpyIter *iter, char **errmsg)
 
 /* SPECIALIZED getindex functions */
 
-#pragma omp declare target
+//#pragma omp declare target
 
 /**begin repeat
  * #const_itflags = 0,
@@ -528,7 +528,7 @@ mpyiter_get_multi_index_itflags@tag_itflags@(
 }
 /**end repeat**/
 
-#pragma omp end declare target
+//#pragma omp end declare target
 
 /*NUMPY_API
  * Compute a specialized get_multi_index function for the iterator
@@ -645,7 +645,7 @@ MpyIter_CanOffloadIternext(MpyIter_IterNextFunc *iternext)
  */
 static void DummyOffloadBuild(void) {
     void *f;
-#pragma omp target
+//#pragma omp target
     {
         f = &mpyiter_iternext_sizeone;
         f = &mpyiter_iternext_itflags0_dims1_iters1;

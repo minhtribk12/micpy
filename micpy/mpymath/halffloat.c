@@ -15,7 +15,7 @@
 #define NPY_HALF_GENERATE_UNDERFLOW 1
 #define NPY_HALF_GENERATE_INVALID 1
 
-#pragma omp declare target
+//#pragma omp declare target
 
 /*
  ********************************************************************
@@ -544,4 +544,4 @@ npy_uint64 mpy_halfbits_to_doublebits(npy_uint16 h)
     }
 }
 
-#pragma omp end declare target
+//#pragma omp end declare target

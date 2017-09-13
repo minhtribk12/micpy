@@ -25,7 +25,7 @@
 #include <float.h>
 #include <string.h> /* for memcpy */
 
-#pragma omp declare target
+//#pragma omp declare target
 
 /* Figure out the right abs function for pointer addresses */
 static NPY_INLINE npy_intp
@@ -854,6 +854,6 @@ imci_@kind@_@TYPE@(@type@ * ip, @type@ * op, const npy_intp n)
 
 #endif /* MPY_HAVE_IMCI_INTRINSICS */
 
-#pragma omp end declare target
+//#pragma omp end declare target
 
 #endif

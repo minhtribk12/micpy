@@ -38,7 +38,7 @@ static const union { npy_uint32 __i; float __f;} __bnzerof = {0x80000000UL};
 #define MPY_PZEROL ((npy_longdouble)MPY_PZEROF)
 #define MPY_NZEROL ((npy_longdouble)MPY_NZEROF)
 
-#pragma omp declare target
+//#pragma omp declare target
 /*
  * C99 double math funcs
  */
@@ -570,6 +570,6 @@ npy_float mpy_spacingf(npy_float x);
 npy_double mpy_spacing(npy_double x);
 npy_longdouble mpy_spacingl(npy_longdouble x);
 
-#pragma omp end declare target
+//#pragma omp end declare target
 
 #endif

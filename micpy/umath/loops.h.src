@@ -20,7 +20,7 @@
 #define BOOL_fmax BOOL_maximum
 #define BOOL_fmin BOOL_minimum
 
-#pragma omp declare target
+//#pragma omp declare target
 
 /*
  *****************************************************************************
@@ -541,6 +541,6 @@ TIMEDELTA_mm_d_divide(char **args, npy_intp *dimensions, npy_intp *steps, void *
  *****************************************************************************
  */
 
-#pragma omp end declare target
+//#pragma omp end declare target
 
 #endif

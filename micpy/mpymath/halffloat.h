@@ -4,7 +4,7 @@
 #include <numpy/npy_math.h>
 #include <mpymath/mpy_math.h>
 
-#pragma omp declare target
+//#pragma omp declare target
 
 #ifdef __cplusplus
 extern "C" {
@@ -69,6 +69,6 @@ npy_uint64 mpy_halfbits_to_doublebits(npy_uint16 h);
 }
 #endif
 
-#pragma omp end declare target
+//#pragma omp end declare target
 
 #endif

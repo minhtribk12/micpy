@@ -244,7 +244,7 @@
     for(i = 0; i < n; i++, ip1 += is1, ip2 += is2, op1 += os1, op2 += os2)
 
 /* Start declare target section */
-#pragma omp declare target
+//#pragma omp declare target
 
 /******************************************************************************
  **                          GENERIC FLOAT LOOPS                             **
@@ -1656,7 +1656,7 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
 // Author: minhtribk12
 // Date: 22/08/2017
 /*    frequency ++;
-    #pragma omp parallel for
+    //#pragma omp parallel for
     for(i = 0; i < NUM_THREADS; i++)
     {
         count[i] = 0;
@@ -1675,7 +1675,7 @@ pairwise_sum_@TYPE@(@dtype@ *a, npy_uintp n, npy_intp stride)
         }
 
     }
-	#pragma omp parallel for schedule(guided,CHUNK_SIZE) reduction (+:res)
+	//#pragma omp parallel for schedule(guided,CHUNK_SIZE) reduction (+:res)
 */
 	for (i = 0; i < n; i++) {
 // Parallel pairwise_sum
@@ -1790,7 +1790,7 @@ NPY_NO_EXPORT void
         npy_intp n = dimensions[0]; 
         npy_intp i;
 #if @PW2@
-        #pragma omp parallel for firstprivate(ip2,is2) reduction (@OP@:io1) schedule (guided,CHUNK_SIZE)
+        //#pragma omp parallel for firstprivate(ip2,is2) reduction (@OP@:io1) schedule (guided,CHUNK_SIZE)
 #endif 
         for(i = 0; i < n; i++) {
             io1 @OP@= *(@type@ *)(ip2 + is2*i);
@@ -1803,7 +1803,7 @@ NPY_NO_EXPORT void
         npy_intp is1 = steps[0], is2 = steps[1], os1 = steps[2];
         npy_intp n = dimensions[0];
         npy_intp i;
-        #pragma omp parallel for firstprivate(is1,is2,os1) schedule (guided,CHUNK_SIZE)
+        //#pragma omp parallel for firstprivate(is1,is2,os1) schedule (guided,CHUNK_SIZE)
         for(i = 0; i < n; i++) {
             const @type@ in1 = *(@type@ *)(ip1 + i*is1);
             const @type@ in2 = *(@type@ *)(ip2 + i*is2);
@@ -3051,5 +3051,5 @@ NPY_NO_EXPORT void
  *****************************************************************************
  */
 
-#pragma omp end declare target
+//#pragma omp end declare target
 /* End declare target section */
